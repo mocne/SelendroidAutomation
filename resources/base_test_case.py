@@ -1,17 +1,16 @@
-__author__ = 'andriy.tutunyk'
+__author__ = 'andrii.tiutiunnyk'
 
 import unittest
 from appium import webdriver
-from resources import desired_capabilities
+from .selendroid_toolKit import Selendroid
 
 
 class BaseTestCase(unittest.TestCase):
     def setUp(self):
-        application = 'selendroid-test-app.apk'
+        self.mobile = Selendroid()
         executor = 'http://localhost:4723/wd/hub'
-
-        desired_capabs = desired_capabilities.get_desired_capabilities(application)
-        self.driver = webdriver.Remote(executor, desired_capabs)
+        self.mobile.driver = webdriver.Remote(command_executor=executor,
+                                              desired_capabilities=self.mobile.desired_capabilities)
 
     def tearDown(self):
         # self.driver.quit()
