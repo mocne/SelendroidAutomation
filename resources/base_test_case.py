@@ -13,5 +13,5 @@ class BaseTestCase(unittest.TestCase):
                                               desired_capabilities=self.mobile.desired_capabilities)
 
     def tearDown(self):
-        # self.driver.quit()
-        print('>>> in tearDown method of ', self.__class__.__name__)
+        self.mobile.driver.quit()
+        # print('>>> in tearDown method of ', self.__class__.__name__)

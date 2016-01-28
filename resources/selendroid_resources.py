@@ -13,3 +13,10 @@ class ApplicationObjects(object):
     display_toast_button_ID = 'io.selendroid.testapp:id/showToastButton'
     display_popup_window_button_ID = 'io.selendroid.testapp:id/showPopupWindowButton'
     unhandled_exception_button_ID = 'io.selendroid.testapp:id/exceptionTestButton'
+
+# ======================================================================================
+
+    i_agree_button_ID = 'android:id/button1'
+    no_button_ID = 'android:id/button2'
+    message_ID = 'android:id/message'
+    message_text = 'This will end the activity'
