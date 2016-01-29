@@ -14,4 +14,4 @@ class BaseTestCase(unittest.TestCase):
 
     def tearDown(self):
         self.mobile.driver.quit()
-        # print('>>> in tearDown method of ', self.__class__.__name__)
+        print('>>> in tearDown method of ', self.__class__.__name__)
