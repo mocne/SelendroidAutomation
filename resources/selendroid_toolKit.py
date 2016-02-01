@@ -1,10 +1,7 @@
 from .selendroid_resources import ApplicationObjects
-
-# from appium import webdriver
-
+from appium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
-
 from .user import User
 
 
@@ -58,7 +55,8 @@ class Selendroid(object):
             return text_view
         except NoSuchElementException:
             pass
-        else: return False
+        else:
+            return False
 
     def click_display_toast_button(self):
         self.driver.find_element_by_id(ApplicationObjects.display_toast_button_ID).click()
@@ -71,3 +69,45 @@ class Selendroid(object):
 
     def get_encoding_text_view(self):
         return self.driver.find_element_by_id(ApplicationObjects.encoding_text_viewID)
+
+
+# ========================================================================================================================
+# user registration helpers
+# ========================================================================================================================
+
+    def find_on_register_activity(self, element_id):
+        element = self.driver.find_element_by_android_uiautomator(
+            'new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().resourceId("{}"))'.format(element_id))
+        return element
+
+    def enter_username(self):
+        username_field = self.find_on_register_activity(ApplicationObjects.input_username_fieldID)
+        username_field.send_keys(self.selendroid_user.user_name)
+
+    def enter_email(self):
+        email_field = self.find_on_register_activity(ApplicationObjects.input_email_fieldID)
+        email_field.send_keys(self.selendroid_user.e_mail)
+
+    def enter_password(self):
+        password_field = self.find_on_register_activity(ApplicationObjects.input_password_fieldID)
+        password_field.send_keys(self.selendroid_user.password)
+
+    def get_default_name(self):
+        name_field = self.find_on_register_activity(ApplicationObjects.input_name_field['id'])
+        return name_field.text
+
+    def enter_name(self):
+        name_field = self.find_on_register_activity(ApplicationObjects.input_name_field['id'])
+        name_field.send_keys(self.selendroid_user.name)
+
+    def set_programming_language(self, programming_language):
+        pass
+
+    def click_accept_adds(self):
+        pass
+
+    def accept_adds_is_clicked(self):
+        pass
+
+    def click_register_user(self):
+        self.driver.find_element_by_id(ApplicationObjects.register_user_buttonID).click()
