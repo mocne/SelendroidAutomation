@@ -16,7 +16,7 @@ class Selendroid(object):
         self.desired_capabilities['newCommandTimeout'] = 17200
         # self.desired_capabilities['automationName'] = "selendroid"
         # self.driver = webdriver.Remote()
-        self.selendroid_user = User('selen_name', 'selen_username', 'selen_password')
+        self.selendroid_user = User('NAME', 'USERNAME', 'PASSWORD')
 
     def is_installed(self):
         return self.driver.is_app_installed(bundle_id=self.desired_capabilities['app-package'])
@@ -26,10 +26,27 @@ class Selendroid(object):
         wait = WebDriverWait(self.driver, wait_time, ignored_exceptions=NameError)
         return wait.until(lambda driver, elem_id=element_id: driver.find_element_by_id(elem_id))
 
+    def wait_for_not_element_id(self, element_id, wait_time=10):
+        wait = WebDriverWait(self.driver, wait_time, ignored_exceptions=NameError)
+        wait.until_not(lambda driver, elem_id=element_id: driver.find_element_by_id(elem_id))
+
     def wait_for_element_name(self, element_name, wait_time=10):
         wait = WebDriverWait(self.driver, wait_time, ignored_exceptions=NameError)
         return wait.until(lambda driver, elem_name=element_name: driver.find_element_by_name(elem_name))
 
+    def is_check_box_checked(self, check_box_id):
+        check_box = self.driver.find_element_by_id(check_box_id)
+        if check_box.get_attribute('checked') == 'true':
+            return True
+        elif check_box.get_attribute('checked') == 'false':
+            return False
+
+    def click_on_check_box(self, check_box_id):
+        self.driver.find_element_by_id(check_box_id).click()
+    '''
+    def clear_text_field(self, text_field_id):
+        self.driver.find_element_by_id(text_field_id).clear()
+    '''
     def click_logout_button(self):
         self.driver.find_element_by_id(ApplicationObjects.EN_Button_ID).click()
 
@@ -40,8 +57,18 @@ class Selendroid(object):
         else:
             self.wait_for_element_id(ApplicationObjects.no_button_ID).click()
 
-    def text_field_enter_text(self, text='some text'):
-        text_field = self.driver.find_element_by_id(ApplicationObjects.text_field_ID)
+    def start_web_view(self):
+        self.driver.find_element_by_id(ApplicationObjects.start_web_view_button_ID).click()
+
+    def start_user_registration(self):
+        self.driver.find_element_by_id(ApplicationObjects.user_registration_button_ID).click()
+
+    def start_user_registration_with_delay(self):
+        self.driver.find_element_by_id(ApplicationObjects.show_progress_bar_button_ID).click()
+        self.wait_for_not_element_id(ApplicationObjects.progress_bar_ID)
+
+    def text_field_enter_text(self, text_field_id, text='some text'):
+        text_field = self.driver.find_element_by_id(text_field_id)
         text_field.send_keys(text)
         self.driver.hide_keyboard()
         assert text_field.text == text
@@ -51,12 +78,11 @@ class Selendroid(object):
 
     def text_view_is_displayed(self):
         try:
-            text_view = self.driver.find_element_by_id(ApplicationObjects.visible_text['resource-id'])
+            text_view = self.driver.find_element_by_id(ApplicationObjects.visible_text_view_ID)
             return text_view
         except NoSuchElementException:
             pass
-        else:
-            return False
+        # else: return False
 
     def click_display_toast_button(self):
         self.driver.find_element_by_id(ApplicationObjects.display_toast_button_ID).click()
@@ -70,7 +96,6 @@ class Selendroid(object):
     def get_encoding_text_view(self):
         return self.driver.find_element_by_id(ApplicationObjects.encoding_text_viewID)
 
-
 # ========================================================================================================================
 # user registration helpers
 # ========================================================================================================================
@@ -80,25 +105,26 @@ class Selendroid(object):
             'new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().resourceId("{}"))'.format(element_id))
         return element
 
-    def enter_username(self):
-        username_field = self.find_on_register_activity(ApplicationObjects.input_username_fieldID)
-        username_field.send_keys(self.selendroid_user.user_name)
+    def enter_username(self, username='default_username'):
+        username_field = self.find_on_register_activity(ApplicationObjects.input_username_field_ID)
+        username_field.send_keys(username)
 
-    def enter_email(self):
-        email_field = self.find_on_register_activity(ApplicationObjects.input_email_fieldID)
-        email_field.send_keys(self.selendroid_user.e_mail)
+    def enter_email(self, email='default_email'):
+        email_field = self.find_on_register_activity(ApplicationObjects.input_email_field_ID)
+        email_field.send_keys(email)
 
-    def enter_password(self):
-        password_field = self.find_on_register_activity(ApplicationObjects.input_password_fieldID)
-        password_field.send_keys(self.selendroid_user.password)
+    def enter_password(self, password='default_password'):
+        password_field = self.find_on_register_activity(ApplicationObjects.input_password_field_ID)
+        password_field.send_keys(password)
 
     def get_default_name(self):
-        name_field = self.find_on_register_activity(ApplicationObjects.input_name_field['id'])
+        name_field = self.find_on_register_activity(ApplicationObjects.input_name_field_ID)
         return name_field.text
 
-    def enter_name(self):
-        name_field = self.find_on_register_activity(ApplicationObjects.input_name_field['id'])
-        name_field.send_keys(self.selendroid_user.name)
+    def enter_name(self, name='default_name'):
+        name_field = self.find_on_register_activity(ApplicationObjects.input_name_field_ID)
+        name_field.clear()
+        name_field.send_keys(name)
 
     def set_programming_language(self, programming_language):
         pass
@@ -109,5 +135,5 @@ class Selendroid(object):
     def accept_adds_is_clicked(self):
         pass
 
-    def click_register_user(self):
-        self.driver.find_element_by_id(ApplicationObjects.register_user_buttonID).click()
+    def click_register_user_verify(self):
+        self.driver.find_element_by_id(ApplicationObjects.register_user_verify_button_ID).click()

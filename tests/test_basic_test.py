@@ -1,6 +1,7 @@
 __author__ = 'andrii.tiutiunnyk'
 
 from resources import base_test_case
+from resources.selendroid_resources import ApplicationObjects
 
 
 class BasicTests(base_test_case.BaseTestCase):
@@ -20,9 +21,14 @@ class BasicTests(base_test_case.BaseTestCase):
         self.assertEqual(self.mobile.driver.current_activity, current_activity_1)
 
     def test_004_enter_text(self):
-        self.mobile.text_field_enter_text()
+        self.mobile.text_field_enter_text(ApplicationObjects.text_field_ID)
 
-    def test_005_display_text_view(self):
+    def test_005_accept_adds(self):
+        self.assertTrue(self.mobile.is_check_box_checked(ApplicationObjects.accept_adds_check_box_ID))
+        self.mobile.click_on_check_box(ApplicationObjects.accept_adds_check_box_ID)
+        self.assertFalse(self.mobile.is_check_box_checked(ApplicationObjects.accept_adds_check_box_ID))
+
+    def test_006_display_text_view(self):
         if not self.mobile.text_view_is_displayed():
             self.mobile.click_display_text_button()
             self.assertTrue(self.mobile.text_view_is_displayed())
@@ -33,24 +39,26 @@ class BasicTests(base_test_case.BaseTestCase):
             self.mobile.click_display_text_button()
             self.assertFalse(self.mobile.text_view_is_displayed())
 
-    def test_006_display_toast(self):
+    def test_007_display_toast(self):
         activity_before_click = self.mobile.driver.current_activity
         self.mobile.click_display_toast_button()
         activity_after_click = self.mobile.driver.current_activity
         self.assertEqual(activity_before_click, activity_after_click)
 
-    def test_007_display_popup(self):
+    def test_008_display_popup(self):
         self.mobile.click_display_popup()
 
-    def test_008_press_to_throw_exception(self):
+    def test_009_press_to_throw_exception(self):
         activity_before_click = self.mobile.driver.current_activity
         self.mobile.click_throw_exception()
-        self.assertEqual(activity_before_click, self.mobile.driver.current_activity, msg='Application crashed')
+        self.assertEqual(activity_before_click, self.mobile.driver.current_activity, msg='Expected crash.')
 
-    def test_009_type_to_throw_exception(self):
-        pass
+    def test_010_type_to_throw_exception(self):
+        activity_before = self.mobile.driver.current_activity
+        self.mobile.text_field_enter_text(ApplicationObjects.exception_text_field_ID)
+        self.assertEqual(activity_before, self.mobile.driver.current_activity)
 
-    def test_010_encoding(self):
+    def test_011_encoding(self):
         china_string = b'\xe3\x83\x91\xe3\x82\xbd\xe3\x82\xb3\xe3\x83\xb3\xe7\x89\x88\xe3\x81\xab\xe3\x81\x99\xe3\x82\x8b'
         encoding_text_view = self.mobile.get_encoding_text_view()
         self.assertEqual(encoding_text_view.text.encode(), china_string)

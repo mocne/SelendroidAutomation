@@ -20,9 +20,9 @@ class BaseTestCase(unittest.TestCase):
                                               desired_capabilities=self.mobile.desired_capabilities)
 
     def tearDown(self):
-        #self.test_case_count += 1
+        # self.test_case_count += 1
 
-        #print(self.test_case_count)
+        # print(self.test_case_count)
         self.mobile.driver.quit()
-        #print('>>> in tearDown method of ', self.__class__.__name__)
-        #print(self.countTestCases())
+        # print('>>> in tearDown method of ', self.__class__.__name__)
+        # print(self.countTestCases())
