@@ -27,7 +27,7 @@ class TestUserRegistration(base_test_case.BaseTestCase):
         self.mobile.click_register_user_verify()
         self.assertEqual('.VerifyUserActivity', self.mobile.driver.current_activity)
         verification_parameters = self.mobile.full_user_verification()
-        self.assertListEqual(registration_parameters, verification_parameters, 'ky-ky')
+        self.assertListEqual(registration_parameters, verification_parameters)
 
 
 if __name__ == "__main__":
