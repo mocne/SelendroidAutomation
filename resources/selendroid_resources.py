@@ -39,6 +39,7 @@ class ApplicationObjects(object):
     input_password_field_ID = 'io.selendroid.testapp:id/inputPassword'
     input_name_field_ID = 'io.selendroid.testapp:id/inputName'
     programming_language_spinner_ID = 'io.selendroid.testapp:id/input_preferedProgrammingLanguage'
+    programming_language_spinner_text_ID = 'android:id/text1'
     adds_check_box_ID = 'io.selendroid.testapp:id/input_adds'
     register_user_verify_button_ID = 'io.selendroid.testapp:id/btnRegisterUser'
 

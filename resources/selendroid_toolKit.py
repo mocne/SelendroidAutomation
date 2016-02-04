@@ -18,6 +18,9 @@ class Selendroid(object):
         # self.driver = webdriver.Remote()
         self.selendroid_user = User('NAME', 'USERNAME', 'PASSWORD')
 
+# ======================================================================================================================
+# basic helpers
+# ======================================================================================================================
     def is_installed(self):
         return self.driver.is_app_installed(bundle_id=self.desired_capabilities['app-package'])
 
@@ -34,8 +37,8 @@ class Selendroid(object):
         wait = WebDriverWait(self.driver, wait_time, ignored_exceptions=NameError)
         return wait.until(lambda driver, elem_name=element_name: driver.find_element_by_name(elem_name))
 
-    def is_check_box_checked(self, check_box_id):
-        check_box = self.driver.find_element_by_id(check_box_id)
+    def is_check_box_checked(self, check_box):
+        # check_box = self.driver.find_element_by_id(check_box_id)
         if check_box.get_attribute('checked') == 'true':
             return True
         elif check_box.get_attribute('checked') == 'false':
@@ -47,6 +50,10 @@ class Selendroid(object):
     def clear_text_field(self, text_field_id):
         self.driver.find_element_by_id(text_field_id).clear()
     '''
+
+# ======================================================================================================================
+# .HomeScreenActivity helpers
+# ======================================================================================================================
     def click_logout_button(self):
         self.driver.find_element_by_id(ApplicationObjects.EN_Button_ID).click()
 
@@ -96,9 +103,9 @@ class Selendroid(object):
     def get_encoding_text_view(self):
         return self.driver.find_element_by_id(ApplicationObjects.encoding_text_viewID)
 
-# ========================================================================================================================
+# ======================================================================================================================
 # user registration helpers
-# ========================================================================================================================
+# ======================================================================================================================
 
     def find_on_register_activity(self, element_id):
         element = self.driver.find_element_by_android_uiautomator(
@@ -127,13 +134,63 @@ class Selendroid(object):
         name_field.send_keys(name)
 
     def set_programming_language(self, programming_language):
-        pass
+        self.find_on_register_activity(ApplicationObjects.programming_language_spinner_ID).click()
+        language = self.driver.find_element_by_android_uiautomator(
+            'new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().text("{}"))'.format(programming_language))
+        language.click()
 
-    def click_accept_adds(self):
-        pass
-
-    def accept_adds_is_clicked(self):
-        pass
+    def full_user_registration(self, username, email, password, name, programming_language, accept_adds=True):
+        registration_parameters = [username, email, password, name, programming_language, accept_adds]
+        self.enter_username(username)
+        self.enter_email(email)
+        self.enter_password(password)
+        self.enter_name(name)
+        self.set_programming_language(programming_language)
+        adds_check_box = self.find_on_register_activity(ApplicationObjects.adds_check_box_ID)
+        if accept_adds:
+            if self.is_check_box_checked(adds_check_box):
+                pass
+            elif not self.is_check_box_checked(adds_check_box):
+                adds_check_box.click()
+        if not accept_adds:
+            if self.is_check_box_checked(adds_check_box):
+                adds_check_box.click()
+            elif not self.is_check_box_checked(adds_check_box):
+                pass
+        return registration_parameters
 
     def click_register_user_verify(self):
-        self.driver.find_element_by_id(ApplicationObjects.register_user_verify_button_ID).click()
+        self.find_on_register_activity(ApplicationObjects.register_user_verify_button_ID).click()
+
+# ======================================================================================================================
+# user verification helpers
+# ======================================================================================================================
+
+    def verify_get_name(self):
+        return self.driver.find_element_by_id(ApplicationObjects.name_data_ID).text
+
+    def verify_get_username(self):
+        return self.driver.find_element_by_id(ApplicationObjects.username_data_ID).text
+
+    def verify_get_password(self):
+        return self.driver.find_element_by_id(ApplicationObjects.password_data_ID).text
+
+    def verify_get_email(self):
+        return self.driver.find_element_by_id(ApplicationObjects.email_data_ID).text
+
+    def verify_get_programming_language(self):
+        return self.driver.find_element_by_id(ApplicationObjects.programming_language_data_ID).text
+
+    def verify_get_accept_adds(self):
+        accept_adds_text = self.driver.find_element_by_id(ApplicationObjects.accept_adds_data_ID).text
+        if accept_adds_text == 'true':
+            return True
+        elif accept_adds_text == 'false':
+            return False
+
+    def click_register_user_button(self):
+        self.driver.find_element_by_id(ApplicationObjects.register_user_button_ID).click()
+
+    def full_user_verification(self):
+        return [self.verify_get_username(), self.verify_get_email(),self.verify_get_password(), self.verify_get_name(),
+                self.verify_get_programming_language(), self. verify_get_accept_adds()]
