@@ -6,7 +6,7 @@ from .user import User
 
 
 class Selendroid(object):
-    def __init__(self, driver=None):
+    def __init__(self, driver=None, device_orientation='PORTRAIT'):
         self.driver = driver
         self.desired_capabilities = dict()
         self.desired_capabilities['platformName'] = 'Android'
@@ -17,12 +17,29 @@ class Selendroid(object):
         # self.desired_capabilities['automationName'] = "selendroid"
         # self.driver = webdriver.Remote()
         self.selendroid_user = User('NAME', 'USERNAME', 'PASSWORD')
+        self.device_orientation = device_orientation
 
 # ======================================================================================================================
 # basic helpers
 # ======================================================================================================================
     def is_installed(self):
         return self.driver.is_app_installed(bundle_id=self.desired_capabilities['app-package'])
+
+    def set_orientation_landscape(self):
+        current_orientation = self.driver.orientation
+        if current_orientation == 'LANDSCAPE':
+            print('>>> device is already in landscape mode')
+            pass
+        elif current_orientation == 'PORTRAIT':
+            self.device_orientation = self.driver.orientation = 'LANDSCAPE'
+
+    def set_orientation_portrait(self):
+        current_orientation = self.driver.orientation
+        if current_orientation == 'PORTRAIT':
+            print('>>> device is already in portrait mode')
+            pass
+        elif current_orientation == 'LANDSCAPE':
+            self.device_orientation = self.driver.orientation = 'PORTRAIT'
 
     def wait_for_element_id(self, element_id, wait_time=10):
         # element = self.driver.find_element_by_id(element_id)
@@ -115,14 +132,17 @@ class Selendroid(object):
     def enter_username(self, username='default_username'):
         username_field = self.find_on_register_activity(ApplicationObjects.input_username_field_ID)
         username_field.send_keys(username)
+        self.driver.hide_keyboard()
 
     def enter_email(self, email='default_email'):
         email_field = self.find_on_register_activity(ApplicationObjects.input_email_field_ID)
         email_field.send_keys(email)
+        self.driver.hide_keyboard()
 
     def enter_password(self, password='default_password'):
         password_field = self.find_on_register_activity(ApplicationObjects.input_password_field_ID)
         password_field.send_keys(password)
+        self.driver.hide_keyboard()
 
     def get_default_name(self):
         name_field = self.find_on_register_activity(ApplicationObjects.input_name_field_ID)
@@ -132,6 +152,7 @@ class Selendroid(object):
         name_field = self.find_on_register_activity(ApplicationObjects.input_name_field_ID)
         name_field.clear()
         name_field.send_keys(name)
+        self.driver.hide_keyboard()
 
     def set_programming_language(self, programming_language):
         self.find_on_register_activity(ApplicationObjects.programming_language_spinner_ID).click()

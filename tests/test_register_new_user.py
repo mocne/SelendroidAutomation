@@ -6,7 +6,11 @@ import time
 
 class TestUserRegistration(base_test_case.BaseTestCase):
     def test_001_register_new_user(self):
+        print(self.mobile.device_orientation)
         self.mobile.start_user_registration()
+        print(self.mobile.device_orientation)
+        self.mobile.set_orientation_landscape()
+        print(self.mobile.device_orientation)
         """
         self.mobile.enter_username(username=self.mobile.selendroid_user.user_name)
         self.mobile.enter_email(email=self.mobile.selendroid_user.e_mail)
@@ -25,6 +29,7 @@ class TestUserRegistration(base_test_case.BaseTestCase):
                                                                      self.mobile.selendroid_user.programming_language[7],
                                                                      accept_adds=True)
         self.mobile.click_register_user_verify()
+        print(self.mobile.device_orientation)
         self.assertEqual('.VerifyUserActivity', self.mobile.driver.current_activity)
         verification_parameters = self.mobile.full_user_verification()
         self.assertListEqual(registration_parameters, verification_parameters)
